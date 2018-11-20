@@ -1,0 +1,11 @@
+#!/bin/bash
+var=$(ps -ef | grep -v 'grep' | grep 'ffmpeg' | awk '{print $2}')
+kill -9 $var
+sdate=`date +%Y-%m-%d-%H-%M-%S`
+/opt/bravo/bin/ffmpeg -i udp://@225.1.2.150:6158 -vcodec copy -acodec copy /mnt/luzhi/$sdate.ts
+
+
+
+
+crontab 
+  */10 * * * * /home/package/luzhi.sh >/d >/dev/null 2>&1
