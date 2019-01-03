@@ -10,3 +10,4 @@ ping 10.23.231.129 -c 5
 systemctl start ntpd
 #/usr/bin/mount -t nfs -o nolock 10.23.233.29:/Lunbo_Dell /data
 mount -t nfs -o nolock,noexec,nosuid,nodev,rw,rsize=1048576,wsize=1048576 10.23.233.29:/Lunbo_Dell /data
+/usr/bin/mount -t nfs -o nolock 10.23.233.29:/Lunbo_Dell /data
