@@ -1,0 +1,20 @@
+#!/bin/bash
+file_name='Temp_164_'`date +%F-%H:%M:%S`'.pcap'
+#touch $file_name
+/usr/sbin/tcpdump -i enp5s0 host 235.0.2.1 and udp port 10000 -w $file_name -vvnn & pid=`pgrep tcpdump`
+start_time=`date +%s`
+while [ "1" = "1" ]
+do
+        end_time=`date +%s`
+        Times=`echo $end_time-$start_time|bc`
+        if [ $Times -ge 1200 ]
+        then
+                kill -9 `ps -ef|grep tcpdump|grep -v grep|awk '{print $2}'`
+                file_name='Temp_164_'`date +%F-%H:%M:%S`'.pcap'
+                /usr/sbin/tcpdump -i enp5s0 host 235.0.2.1 and udp port 10000 -w $file_name -vvnn & pid=`pgrep tcpdump`
+                start_time=$end_time
+        fi
+        sleep 1
+done
+~                                                                                                                                                                                                    
+~             
