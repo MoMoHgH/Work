@@ -1,0 +1,75 @@
+主主备份
+
+
+先备份
+
+01 
+	
+	Master  X.X.X.130
+			
+			mkdir /var/lib/mysql/binlog
+			mkdir /var/lib/mysql/relaylog
+			chown mysql.mysql /var/lib/mysql/binlog
+			chown mysql.mysql /var/lib/mysql/relaylog
+			
+			配置文件
+				/etc/my.cnf
+					server_id=100
+					log-bin = /var/lib/mysql/binlog/mysql-bin
+					expire_logs_days=7
+					binlog-do-db=bravo_playout
+					relay_log=/var/lib/mysql/relaylog/mysql-relay-bin
+					#binlog-ignore-db=mysql
+	Slave	X.X.X.131 
+			
+			mkdir /var/lib/mysql/binlog
+			mkdir /var/lib/mysql/relaylog
+			chown mysql.mysql /var/lib/mysql/binlog
+			chown mysql.mysql /var/lib/mysql/relaylog
+			
+			配置文件
+				/etc/my.cnf
+					server_id=101
+					log-bin = /var/lib/mysql/binlog/mysql-bin
+					expire_logs_days=7
+					binlog-do-db=bravo_playout
+					relay_log=/var/lib/mysql/relaylog/mysql-relay-bin
+					#binlog-ignore-db=mysql
+
+			导入备份数据
+			
+	重启 Master Slave 数据库
+	
+	
+	Master  X.X.X.130
+	
+			grant replication slave on *.* to 'root'@'X.X.X.131' identified by 'PASS';
+			show master status;
+
+	Slave   X.X.X.131
+			
+			change master to \
+master_host='X.X.X.130',
+master_user='root',
+master_password='PASS',
+master_log_file='mysql-bin.000002',
+master_log_pos=744;
+
+
+			start slave;
+			
+02
+	Slave	X.X.X.131
+			grant replication slave on *.* to 'root'@'X.X.X.130' identified by 'PASS';
+			show master status;
+			
+	Master 	X.X.X.130
+	
+change master to \
+master_host='X.X.X.131',
+master_user='root',
+master_password='PASS',
+master_log_file='mysql-bin.000001',
+master_log_pos=120;
+			
+			start slave;
