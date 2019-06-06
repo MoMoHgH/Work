@@ -1,0 +1,30 @@
+	官网下载源码包：http://nginx.org/en/download.html
+		nginx-1.15.12.tar.gz
+		
+	
+	编译安装：
+		tar -xzvf nginx-1.15.12.tar.gz
+		cd nginx-1.15.12
+		./configure --prefix=/usr/local/nginx --with-http_dav_module 
+		make & make install
+		
+	修改配置文件：	
+		vim /usr/local/nginx/conf/nginx.conf
+			
+			user root;
+			location / {
+				root /dev/shm;
+				dav_methods PUT DELETE MKCOL COPY MOVE;
+				create_full_put_path on;
+				dav_access group:rw all:r;
+				client_max_body_size    100m;
+				index  index.html index.htm;
+			}
+	
+	配置环境变量：
+		echo "PATH=/usr/local/nginx/sbin:$PATH" >>  /etc/profile.d/nginx.sh
+	
+	
+	重新加载启动：
+		nginx -s reload
+
