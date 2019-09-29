@@ -1,0 +1,19 @@
+#!/bin/bash
+file_name='Temp_164_23_hls_'`date +%F-%H:%M:%S`'.ts'
+#touch $file_name
+/opt/bravo/bin/ffmpeg -i http://172.17.140.23:8080/live/4kceshi.m3u8 -acodec copy -vcodec copy /data/videos/luzhi/hls_23/$file_name & pid=`pgrep tcpdump`
+start_time=`date +%s`
+while [ "1" = "1" ]
+do
+        end_time=`date +%s`
+        Times=`echo $end_time-$start_time|bc`
+        if [ $Times -ge 600 ]
+        then
+                kill -9 `ps -ef|grep ffmpeg|grep -v grep|awk '{print $2}'`
+                file_name='Temp_164_23_hls_'`date +%F-%H:%M:%S`'.ts'
+                /opt/bravo/bin/ffmpeg -i http://172.17.140.23:8080/live/4kceshi.m3u8 -acodec copy -vcodec copy /data/videos/luzhi/hls_23/$file_name & pid=`pgrep tcpdump`
+                start_time=$end_time
+
+        fi
+        sleep 1
+done
