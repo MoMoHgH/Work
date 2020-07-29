@@ -1,0 +1,1 @@
+1 1 * * * /bin/find /root/cctv8/ -name "*.ts" -a -mmin +3000 -exec rm -f {} \;
